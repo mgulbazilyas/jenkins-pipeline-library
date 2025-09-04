@@ -4,12 +4,12 @@ import groovy.json.JsonOutput
  * Send a simple Discord message for the current Jenkins job.
  *
  * Usage (Pipeline):
- *   discordNotify(text: "Build finished ✅")        // webhook taken from creds 'discordurl'
+ *   discordNotify(text: "Build finished ✅")        // webhook taken from creds 'discordkey'
  *   discordNotify(webhook: "https://discord.com/api/webhooks/...", text: "Hello from Jenkins")
  *   discordNotify(text: "Deployed!", link: "https://example/build/123", title: "Custom Title")
  *
  * Params:
- *   webhook (optional) : Discord webhook URL. If omitted, uses Jenkins Secret Text credential 'discordurl'
+ *   webhook (optional) : Discord webhook URL. If omitted, uses Jenkins Secret Text credential 'discordkey'
  *   text    (required) : Main message text to show
  *   title   (optional) : Embed title (defaults to env.JOB_NAME)
  *   link    (optional) : URL for the title (defaults to env.BUILD_URL)
@@ -18,20 +18,20 @@ import groovy.json.JsonOutput
  *   avatar  (optional) : Avatar URL
  *   footer  (optional) : Footer text (defaults to "Jenkins • <result>")
  */
-def call(Map args = [:]) {
+def call(Map args) {
   if (!args.text) {
     error "discordNotify: 'text' is required"
   }
 
-  // Resolve webhook URL (param > Jenkins credential 'discordurl')
+  // Resolve webhook URL (param > Jenkins credential 'discordkey')
   String webhookUrl = args.webhook
   if (!webhookUrl) {
-    withCredentials([string(credentialsId: 'discordurl', variable: 'DISCORD_URL')]) {
+    withCredentials([string(credentialsId: 'discordkey', variable: 'DISCORD_URL')]) {
       webhookUrl = DISCORD_URL
     }
   }
   if (!webhookUrl) {
-    error "discordNotify: No webhook URL provided and credential 'discordurl' not found."
+    error "discordNotify: No webhook URL provided and credential 'discordkey' not found."
   }
 
   // Build defaults from current job
