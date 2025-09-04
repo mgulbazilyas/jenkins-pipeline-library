@@ -18,7 +18,7 @@ import groovy.json.JsonOutput
  *   avatar  (optional) : Avatar URL
  *   footer  (optional) : Footer text (defaults to "Jenkins • <result>")
  */
-def discordNotify(Map args = [:]) {
+def call(Map args = [:]) {
   if (!args.text) {
     error "discordNotify: 'text' is required"
   }
